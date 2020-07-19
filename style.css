@@ -1,0 +1,36 @@
+#map-ouput {
+    width: 100%;
+    margin : 1rem;
+}
+
+.row-map-output{
+    display: flex;
+    flex-wrap: nowrap;
+    background-color: DodgerBlue;
+}
+
+.col-map-output{
+    background-color: #f1f1f1;
+    width: 100px;
+    margin: 10px;
+    text-align: center;
+    line-height: 75px;
+    font-size: 30px;
+}
+
+.col-map-output:hover{
+    opacity: 0.5
+}
+.blocked{
+    background-color: black!important
+}
+.starting {
+    background-color: yellow!important
+}
+.active-path{
+    transition-duration: 1s;
+    background-color: green!important
+}
+.goal {
+    background-color: red!important
+}
