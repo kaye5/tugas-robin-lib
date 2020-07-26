@@ -1,6 +1,6 @@
 function Draw(map) {
     this.map = map || []
-
+    //Output map
     this.drawEmptyMap = () => {
         var output = document.getElementById('map-output')
         output.innerHTML = ''
@@ -33,13 +33,13 @@ function Draw(map) {
             output.append(rowOutput)
         })
     }
-
+    // draw solution path
     this.drawMovePath = (x, y) => {
         let block = document.getElementById(`output-${x}-${y}`)
         block.classList.add('active-path')
     }
 }
-
+//draw solusi
 function DrawSolution(solution, startingPoint) {
     this.solution = solution
     this.South = [1, 0]
@@ -48,7 +48,7 @@ function DrawSolution(solution, startingPoint) {
     this.West = [0, -1]
     this.currentX = startingPoint.x
     this.currentY = startingPoint.y
-
+    //draw the solution on html
     this.Draw = function () {
         let output = document.getElementById('pathfinder-output')
         output.style.fontSize = '20px'
@@ -58,9 +58,7 @@ function DrawSolution(solution, startingPoint) {
             return false
         }
         output.innerHTML = `<p>${this.solution.join(' - ')}</p>`
-        document
-            .getElementById(`output-${this.currentX}-${this.currentY}`)
-            .classList.add('active-path')
+        draw.drawMovePath(this.currentX,this.currentY)
         this.solution.forEach((row) => {
             switch (row) {
                 case 'South':
@@ -78,30 +76,12 @@ function DrawSolution(solution, startingPoint) {
                 default:
                     break
             }
-            document
-                .getElementById(`output-${this.currentX}-${this.currentY}`)
-                .classList.add('active-path')
+            draw.drawMovePath(this.currentX,this.currentY)
         })
     }
+    // Change the current location of path
     this.moveLoc = function (path) {
         this.currentX += path[0]
         this.currentY += path[1]
-    }
-}
-
-function handleClick() {
-    let rowcol = this.id.split('-')
-    let x = rowcol[1]
-    let y = rowcol[2]
-    if (this.classList.contains('goal')) {
-        this.classList.remove('goal')
-        this.classList.add('blocked')
-        map.setBlock(x, y)
-    } else if (this.classList.contains('blocked')) {
-        this.classList.remove('blocked')
-        map.removeBlock(x, y)
-    } else {
-        this.classList.add('blocked')
-        map.setBlock(x, y)
     }
 }

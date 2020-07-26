@@ -65,10 +65,28 @@ function reset() {
     delete draw
     var output = document.getElementById('map-output')
     output.innerHTML = ''
-    output.document.getElementById('pathfinder-ouput')
+    output.document.getElementById('pathfinder-output')
     output.innerHTML = ''
     starting = {
         x: 0,
         y: 0
+    }
+}
+
+//membaut sebuah block
+function handleClick() {
+    let rowcol = this.id.split('-')
+    let x = rowcol[1]
+    let y = rowcol[2]
+    if (this.classList.contains('goal')) {
+        this.classList.remove('goal')
+        this.classList.add('blocked')
+        map.setBlock(x, y)
+    } else if (this.classList.contains('blocked')) {
+        this.classList.remove('blocked')
+        map.removeBlock(x, y)
+    } else {
+        this.classList.add('blocked')
+        map.setBlock(x, y)
     }
 }
