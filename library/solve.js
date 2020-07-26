@@ -1,41 +1,109 @@
-function PathFinder(maze) {
+var findShortestPath = function (startCoordinates, grid) {
+    var distanceFromTop = startCoordinates[0]
+    var distanceFromLeft = startCoordinates[1]
 
-    this.maze = maze;
-    
-    this.path = [];
-    
-    this.solve = function(column, row) {
-        if(this.maze[column][row] == 2) {
-            this.path.push({
-                x : column,
-                y : row,
-                finish : true
-            })
-//            console.log("We solved the maze at (" + column + ", " + row + ")");
-        } else if(this.maze[column][row] == 1) {
-            this.path.push({
-                x : column,
-                y : row,
-                finish : false
-            })
-//            console.log("At valid position (" + column + ", " + row + ")");
-            this.maze[column][row] = 9;
-            if(column < this.maze.length - 1) {
-                this.solve(column + 1, row);
-            }
-            if(row < this.maze[column].length - 1) {
-                this.solve(column, row + 1);
-            }
-            if(column > 0) {
-                this.solve(column - 1, row);
-            }
-            if(row > 0) {
-                this.solve(column, row - 1);
-            }
-        }
-    };
-
-    this.result = function(){
-        return this.path
+    var location = {
+        distanceFromTop: distanceFromTop,
+        distanceFromLeft: distanceFromLeft,
+        path: [],
+        status: 'Start'
     }
-};
+
+    var queue = [location]
+
+    while (queue.length > 0) {
+        var currentLocation = queue.shift()
+
+        // Explore North
+        var newLocation = exploreInDirection(currentLocation, 'North', grid)
+        if (newLocation.status === 2) {
+            return newLocation.path
+        } else if (newLocation.status === 'Valid') {
+            queue.push(newLocation)
+        }
+
+        // Explore East
+        var newLocation = exploreInDirection(currentLocation, 'East', grid)
+        if (newLocation.status === 2) {
+            return newLocation.path
+        } else if (newLocation.status === 'Valid') {
+            queue.push(newLocation)
+        }
+
+        // Explore South
+        var newLocation = exploreInDirection(currentLocation, 'South', grid)
+        if (newLocation.status === 2) {
+            return newLocation.path
+        } else if (newLocation.status === 'Valid') {
+            queue.push(newLocation)
+        }
+
+        // Explore West
+        var newLocation = exploreInDirection(currentLocation, 'West', grid)
+        if (newLocation.status === 2) {
+            return newLocation.path
+        } else if (newLocation.status === 'Valid') {
+            queue.push(newLocation)
+        }
+    }
+
+    return false
+}
+
+// Check  status
+var locationStatus = function (location, grid) {
+    var gridSize = grid.length
+    var dft = location.distanceFromTop
+    var dfl = location.distanceFromLeft
+
+    if (
+        location.distanceFromLeft < 0 ||
+        location.distanceFromLeft >= gridSize ||
+        location.distanceFromTop < 0 ||
+        location.distanceFromTop >= gridSize
+    ) {
+        return 'Invalid'
+    } else if (grid[dft][dfl] === 2) {
+        return 2
+    } else if (grid[dft][dfl] !== 1) {
+        // check block atau visited
+        return 'Blocked'
+    } else {
+        return 'Valid'
+    }
+}
+
+// Explore the grid
+var exploreInDirection = function (currentLocation, direction, grid) {
+    var newPath = currentLocation.path.slice()
+    newPath.push(direction)
+
+    var dft = currentLocation.distanceFromTop
+    var dfl = currentLocation.distanceFromLeft
+
+    if (direction === 'North') {
+        dft -= 1
+    } else if (direction === 'East') {
+        dfl += 1
+    } else if (direction === 'South') {
+        dft += 1
+    } else if (direction === 'West') {
+        dfl -= 1
+    }
+
+    var newLocation = {
+        distanceFromTop: dft,
+        distanceFromLeft: dfl,
+        path: newPath,
+        status: 'Unknown'
+    }
+    newLocation.status = locationStatus(newLocation, grid)
+
+    //Mark location
+    if (newLocation.status === 'Valid') {
+        grid[newLocation.distanceFromTop][newLocation.distanceFromLeft] =
+            'Visited'
+    }
+
+    return newLocation
+}
